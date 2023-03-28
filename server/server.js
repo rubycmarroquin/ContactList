@@ -57,6 +57,31 @@ app.post('/api/students', async (req, res) => {
 
 });
 
+// create the POST request
+app.post('/contacts', async (req, res) => {
+    try {
+        const newContact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            notes: req.body.notes,
+            user_id: req.body.user_id
+        };
+
+        //console.log([newStudent.firstname, newStudent.lastname, newStudent.iscurrent]);
+        const result = await db.query(
+            `INSERT INTO contacts(contact_id, name, email, phone, notes, user_id) VALUES(nextval('contacts_sequence'), $1, $2, $3, $4, $5) RETURNING *`,
+            [newContact.name, newContact.email, newContact.phone, newContact.notes, newContact.user_id],
+        );
+        console.log(result.rows[0]);
+        res.json(result.rows[0]);
+
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ e });
+    }
+});
+
 // delete request for students
 app.delete('/api/students/:studentId', async (req, res) => {
     try {
