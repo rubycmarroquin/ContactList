@@ -132,6 +132,33 @@ app.put('/api/students/:studentId', async (req, res) =>{
     }
   })
 
+  //A put request - Update a student 
+app.put('/contacts/:contactId', async (req, res) =>{
+    //console.log(req.params);
+    //This will be the id that I want to find in the DB - the student to be updated
+    const contactId = req.params.contactId
+    const updatedContact = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            notes: req.body.notes,
+        };
+    console.log("In the server from the url - the student id", contactId);
+    console.log("In the server, from the react - the student to be edited", updatedContact);
+    // UPDATE students SET lastname = "something" WHERE id="16";
+    const query = `UPDATE contacts SET name=$1, email=$2, phone=$3, notes=$4 WHERE contact_id=${contactId} RETURNING *`;
+    const values = [updatedContact.name, updatedContact.email, updatedContact.phone, updatedContact.notes];
+    try {
+      const updated = await db.query(query, values);
+      console.log(updated.rows[0]);
+      res.send(updated.rows[0]);
+  
+    }catch(e){
+      console.log(e);
+      return res.status(400).json({e})
+    }
+  }) 
+
 // console.log that your server is up and running
 app.listen(PORT, () => {
     console.log(`Hola, Server listening on ${PORT}`);
