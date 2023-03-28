@@ -25,6 +25,15 @@ app.get('/api/students', async (req, res) => {
     }
 });
 
+app.get('/contacts', async (req, res) => {
+    try {
+        const { rows: contacts } = await db.query('select * from contacts');
+        res.send(contacts);
+    } catch (e) {
+        return res.status(400).json({ e });
+    }
+});
+
 // create the POST request
 app.post('/api/students', async (req, res) => {
     try {
