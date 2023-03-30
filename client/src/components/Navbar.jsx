@@ -1,7 +1,10 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
 import Logo from '../assets/BlueTechtonicaWord.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+// source: https://feathericons.com/
+import { Heart } from 'react-feather';
 
 
 function MyNavBar(props) {
@@ -10,7 +13,7 @@ function MyNavBar(props) {
     <>
     <Navbar bg="dark" variant="dark" sticky="top">
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand href="https://techtonica.org/">
         <img
               src={Logo}
               height="30"
@@ -18,11 +21,10 @@ function MyNavBar(props) {
               alt="React Bootstrap logo"
             />
         </Navbar.Brand>
-        <Nav.Link >Your Link</Nav.Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            Signed in as: <a href="#login">Ruby Marroquin</a>
+            Hosted By <a href="https://www.linkedin.com/in/rubymarroquin/">Ruby Marroquin <Heart/></a>
           </Navbar.Text>
         </Navbar.Collapse>
       </Container>
