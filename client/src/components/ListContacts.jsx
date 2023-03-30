@@ -6,6 +6,8 @@ const ListContacts = () => {
   // this is my original state with an array of students
   const [contacts, setContacts] = useState([]);
 
+  const [users, setUsers] = useState([]);
+
   //this is the state needed for the UpdateRequest
   const [editingContact, setEditingContact] = useState(null);
 
@@ -13,17 +15,32 @@ const ListContacts = () => {
     // A function to fetch the list of students that will be load anytime that list change
     fetch("http://localhost:8080/contacts")
       .then((response) => response.json())
-      .then((students) => {
-        setContacts(students);
+      .then((contacts) => {
+        setContacts(contacts);
+      });
+  };
+
+  // https://stackoverflow.com/questions/53070970/infinite-loop-in-useeffect
+  useEffect(() => {
+    loadContacts();
+  }, []);
+
+
+  const loadUsers = () => {
+    // A function to fetch the list of students that will be load anytime that list change
+    fetch("http://localhost:8080/users")
+      .then((response) => response.json())
+      .then((users) => {
+        setUsers(users);
       });
   };
 
   useEffect(() => {
-    loadContacts();
-  }, [contacts]);
+    loadUsers();
+  }, []);
 
   const onSaveContact = (newContact) => {
-    setStudents((contacts) => [...contacts, newContact]);
+    setContacts((contacts) => [...contacts, newContact]);
   };
 
   //A function to control the update in the parent (student component)
@@ -42,7 +59,7 @@ const ListContacts = () => {
       }).then((response) => {
         //console.log(response);
         if (response.ok) {
-          loadStudents();
+          loadContacts();
         }
       });
     }
@@ -78,6 +95,7 @@ const ListContacts = () => {
         onSaveContact={onSaveContact}
         editingContact={editingContact}
         onUpdateContact={updateContact}
+        users={users}
       />
     </div>
   );
