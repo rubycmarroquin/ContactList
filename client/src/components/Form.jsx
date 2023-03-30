@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
+import DropDown from "./DropDown";
+import UserDropDown from "./UserDropDown";
 
 const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
   // This is the original State with not initial student
@@ -9,6 +11,8 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
       email: "",
       phone: "",
       notes: "",
+      icon: "", 
+      user_id: ""
     }
   );
 
@@ -33,12 +37,23 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
     setContact((contact) => ({ ...contact, notes }));
   };
 
+  const handleIconChange = (icon) => {
+    setContact((contact) => ({ ...contact, icon }));
+  };
+
+  const handleUserChange = (user_id) => {
+    setContact((contact) => ({ ...contact, user_id }));
+  };
+
   const clearForm = () => {
-    setContact({ name: "", email: "", phone: "", notes: "" });
+    setContact({ name: "", email: "", phone: "", notes: "", icon: "", user_id: ""});
   };
 
   //A function to handle the post request
   const postContact = (newContact) => {
+     if(toEditContact.user_id == null || toEditContact.icon == null) {
+        alert('Must select icon and user'); 
+     } else {
     return fetch("http://localhost:8080/contacts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -54,10 +69,14 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
         //this line just for cleaning the form
         clearForm();
       });
+    }
   };
 
   //A function to handle the post request
   const putContact = (toEditContact) => {
+    if(toEditContact.user_id == null || toEditContact.icon == null) {
+        alert('Must select icon and user'); 
+    } else {
     return fetch(`http://localhost:8080/contacts/${toEditContact.contact_id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -67,10 +86,10 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
         return response.json();
       })
       .then((data) => {
-        onUpdateStudent(data);
-        //this line just for cleaning the form
+        onUpdateContact(data);
         clearForm();
       });
+    }
   };
 
   //A function to handle the submit in both cases - Post and Put request!
@@ -85,6 +104,7 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
 
   return (
     <Form className="form-students" onSubmit={handleSubmit}>
+     <h1>Contacts Form</h1>
       <Form.Group>
         <Form.Label>Name</Form.Label>
         <input
@@ -128,6 +148,10 @@ const MyForm = ({ onSaveContact, editingContact, onUpdateContact }) => {
           value={contact.notes}
           onChange={handleNotesChange}
         />
+      </Form.Group>
+      <Form.Group>
+        <UserDropDown user={contact.user_id} updateUser={handleUserChange}/>
+        <DropDown icon={contact.icon} updateIcon={handleIconChange}/>
       </Form.Group>
       <Form.Group>
         <Button type="submit" variant="outline-success">
